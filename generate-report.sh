@@ -1,11 +1,11 @@
 # Check for docker image provided
-TRIVY="docker run --rm --name trivy -v $(pwd):/tmp/ -w /tmp/ aquasec/trivy"
+TRIVY="docker run --rm --name trivy -v $(pwd):/tmp/ -w /tmp/ -v $HOME/.docker/config.json:/root/.docker/config.json aquasec/trivy"
 
 # Expect the user to input -i <image_name> or -f <file_name>
 if [ "$1" = "-i" ]; then
-    IMAGE_NAME=$2
+    IMAGE_NAME="$2"
 elif [ "$1" = "-f" ]; then
-    FILE_NAME=$2
+    FILE_NAME="$2"
 else
     echo "Please provide -i <image_name> or -f <file_name>"
     exit 1
