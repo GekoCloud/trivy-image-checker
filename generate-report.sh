@@ -13,24 +13,29 @@ fi
 
 if ! [ -z "$FILE_NAME" ]
 then
-      echo "Multiple images were provided in $FILE_NAME"
-      cat $FILE_NAME
-      echo
-      echo
+    echo "Multiple images were provided in $FILE_NAME"
+    cat $FILE_NAME
+    echo
+    echo
 
-      # If a file with multiple images are provided we'll loop through it and scan all of them
-      while read -r image
-      do
-            echo "-----------------------------------"
-            echo "Scanning $image for vulnerabilities"
-            echo "-----------------------------------"
-            $TRIVY -- image --format template --template "@html.tpl" -o /tmp/report-$(echo $image | tr "[/:]" _).html $image
-      done < $FILE_NAME
+    # If a file with multiple images are provided we'll loop through it and scan all of them
+    while read -r image
+    do
+        echo "-----------------------------------"
+        echo "Scanning $image for vulnerabilities"
+        echo "-----------------------------------"
+        echo "Pull image"
+        docker pull $image
+        echo "Scan image"
+        $TRIVY -- image --format template --template "@html.tpl" -o /tmp/report-$(echo $image | tr "[/:]" _).html $image
+    done < $FILE_NAME
 else
-      echo "----------------------------------------"
-      echo "Scanning $IMAGE_NAME for vulnerabilities"
-      echo "----------------------------------------"
-
-      # Else just scan the image provided
-      $TRIVY -- image --format template --template "@html.tpl" -o /tmp/report-$(echo $IMAGE_NAME | tr "[/:]" _).html $IMAGE_NAME
+    # Else just scan the image provided
+    echo "----------------------------------------"
+    echo "Scanning $IMAGE_NAME for vulnerabilities"
+    echo "----------------------------------------"
+    echo "Pull image"
+    docker pull $IMAGE_NAME
+    echo "Scan image"
+    $TRIVY -- image --format template --template "@html.tpl" -o /tmp/report-$(echo $IMAGE_NAME | tr "[/:]" _).html $IMAGE_NAME
 fi
