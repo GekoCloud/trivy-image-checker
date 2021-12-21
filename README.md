@@ -1,10 +1,8 @@
 # trivy-image-checker
 
-## Install trivy
+## Requirements
 
-```
-./trivy-installer.sh
-```
+You must have docker installed locally
 
 ## Generate a new report
 
